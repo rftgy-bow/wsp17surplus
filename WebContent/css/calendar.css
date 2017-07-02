@@ -1,0 +1,62 @@
+@CHARSET "UTF-8";
+table.callender{
+	margin: 0 auto; /*領域間のスペース[上][右][下][左]*/
+	border-collapse: separate; /*collapse:重ねて表示 separate:間隔をあける*/
+	border-spacing: 1px 15px; /*border-collapse=separateの時幅を指定[上][下]*/
+	font-size: 12px; /*フォントサイズ*/
+}
+
+table.callender tr.day th:first-child{/*左端*/
+	background: #FF3300;
+	color: #ffff;
+}
+
+table.callender tr.date td:first-child{/*左端*/
+	background: #FFCC99;
+}
+
+table.callender th,
+table.callender td{
+	padding:10px; /*領域内のスペース[上][右][下][左]*/
+	vertical-align: middle; /*縦方向の揃え位置*/
+	text-align: center; /*横方向の揃え位置*/
+    width: 100px;
+    height: 20px;
+
+}
+
+table.callender th.day{ /*ヘッダー(曜日)*/
+	background: #66CCFF;
+	overflow: visible; /*はみ出た内容の表示方法*/
+    color: #00000;
+    font-weight: normal; /*フォントの太さ*/
+    font-size: 15px; /*フォントサイズ*/
+}
+
+table.callender td{ /*日付*/
+	background: #CEECF5;
+	overflow: visible; /*はみ出た内容の表示方法*/
+    color: #00000;
+	font-weight: normal; /*フォントの太さ*/
+    font-size: 12px; /*フォントサイズ*/
+}
+
+table.callender td.other{ /*前月・次月の日*/
+	background: #BDBDBD;
+}
+table.callender td.today{ /*当日*/
+	color: #FF0000;
+	border: solid 2px #FF0000;
+}
+table.callender td.schedule{ /*スケジュールあり*/
+	background: #00FF00;
+}
+table.callender td.todaySchedule{ /*スケジュールあり*/
+	background: #00FF00;
+}
+button {
+	font-size: 10px;
+	padding: 1px;
+	margin: 1px;
+
+}
