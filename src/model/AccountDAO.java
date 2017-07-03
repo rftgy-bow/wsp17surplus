@@ -1,5 +1,6 @@
 package model;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,30 +10,17 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class AccountDAO {
-	private static String filename = "db.properties";
-	private static String user; // アクセスできるユーザ
-	private static String password; // wspuserのパスワード
-	private static String driverClassName;
-	private static String url;
+	static Properties props = getProperties("db.properties");
+	final private static String user = props.getProperty("user"); // アクセスできるユーザ
+	final private static String password = props.getProperty("password"); // userのパスワード
+	final private static String driverClassName = props.getProperty("driverClassName");
+	final private static String url = props.getProperty("url");
 
-	public AccountDAO() {
-		Properties props = new Properties();
-		try {
-			props.load(getClass().getClassLoader().getResourceAsStream(filename));
-			user = props.getProperty("user");
-			password = props.getProperty("password");
-			driverClassName = props.getProperty("driverClassName");
-			url = props.getProperty("url");
-		} catch (IOException e) {
-			System.out.println("Warning: " + filename + " is not found.");
-		}
-	}
-
-	public boolean check(String accountID, String accountPass) {
+	public boolean login(String accountID, String accountPass) {
 		// accountがDBにあるかどうかを調べる
 		boolean result = false;
 		Connection connection = null;
-		String sql = "select * from account where accountid=? and pass=?";
+		String sql = "select * from account where accountID=? and pass=?";
 
 		try {
 			Class.forName(driverClassName);
@@ -60,40 +48,6 @@ public class AccountDAO {
 			}
 		}
 		return result;
-	}
-
-	public Account login(String accountID, String accountPass) {
-		//DBからアカウント情報を取得しそれを返す
-		Account account = null;
-		Connection connection = null;
-		String sql = "select *from account where accountID=? and pass=?";
-		try {
-			Class.forName(driverClassName);
-			connection = DriverManager.getConnection(url, user, password);
-			PreparedStatement pstmt = connection.prepareStatement(sql);
-			pstmt.setString(1, accountID);
-			pstmt.setString(2, accountPass);
-			ResultSet resultSet = pstmt.executeQuery();
-			if (resultSet.next()) {
-				account = new Account();
-				account.setAccountID(accountID);
-				account.setPass(accountPass);
-				account.setUserName(resultSet.getString("userName"));
-			}
-			resultSet.close();
-			pstmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			//クローズ処理
-			try {
-				if (connection != null)
-					connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return account;
 	}
 
 	public boolean findByAccountID(String accountID) {
@@ -206,5 +160,15 @@ public class AccountDAO {
 			}
 		}
 
+	}
+
+	private static Properties getProperties(String filename) {
+		Properties props = new Properties();
+		try {
+			props.load(new FileInputStream(filename));
+		} catch (IOException e) {
+			System.out.println("Warning: " + filename + " is not found.");
+		}
+		return props;
 	}
 }
