@@ -1,15 +1,17 @@
 package model;
 
 import java.io.Serializable;
+import java.sql.Time;
 
 public class Attendance implements Serializable {
 	private int attendanceID;
-	private String scheduleID;
 	private String accountID;
-	private int attendTime;
-	private int leaveTime;
-	private int absenceType;
+	private String groupID;
+	private int scheduleID;
+	private String absenceType;
 	private String reason;
+	private Time attendTime;
+	private Time leaveTime;
 
 	public int getAttendanceID() {
 		return attendanceID;
@@ -17,14 +19,6 @@ public class Attendance implements Serializable {
 
 	public void setAttendanceID(int attendanceID) {
 		this.attendanceID = attendanceID;
-	}
-
-	public String getScheduleID() {
-		return scheduleID;
-	}
-
-	public void setScheduleID(String scheduleID) {
-		this.scheduleID = scheduleID;
 	}
 
 	public String getAccountID() {
@@ -35,27 +29,27 @@ public class Attendance implements Serializable {
 		this.accountID = accountID;
 	}
 
-	public int getAttendTime() {
-		return attendTime;
+	public String getGroupID() {
+		return groupID;
 	}
 
-	public void setAttendTime(int attendTime) {
-		this.attendTime = attendTime;
+	public void setGroupID(String groupID) {
+		this.groupID = groupID;
 	}
 
-	public int getLeaveTime() {
-		return leaveTime;
+	public int getScheduleID() {
+		return scheduleID;
 	}
 
-	public void setLeaveTime(int leaveTime) {
-		this.leaveTime = leaveTime;
+	public void setScheduleID(int scheduleID) {
+		this.scheduleID = scheduleID;
 	}
 
-	public int getAbsenceType() {
+	public String getAbsenceType() {
 		return absenceType;
 	}
 
-	public void setAbsenceType(int absenceType) {
+	public void setAbsenceType(String absenceType) {
 		this.absenceType = absenceType;
 	}
 
@@ -65,5 +59,21 @@ public class Attendance implements Serializable {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public Time getAttendTime() {
+		return attendTime;
+	}
+
+	public void setAttendTime(Time attendTime) {
+		this.attendTime = attendTime;
+	}
+
+	public Time getLeaveTime() {
+		return leaveTime;
+	}
+
+	public void setLeaveTime(Time leaveTime) {
+		this.leaveTime = leaveTime;
 	}
 }

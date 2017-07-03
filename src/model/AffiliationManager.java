@@ -15,6 +15,7 @@ public class AffiliationManager {
 		if (account != null) {
 			Affiliation affiliation = dao.login(account.getAccountID());
 			session.setAttribute("affiliation", affiliation);
+			//グループリストの取得
 			ArrayList<Affiliation> alist = dao.getAffiliationList(account.getAccountID());
 			GroupDAO gdao = new GroupDAO();
 			String groupList = "";
@@ -25,8 +26,24 @@ public class AffiliationManager {
 				groupList += gdao.getByID(alist.get(i).getGroupID()).getGroupName();
 			}
 			session.setAttribute("groupList", groupList);
-
 		}
+	}
+
+	public void setMemberList(HttpServletRequest request, HttpServletResponse response) {
+		//メンバーリストをCSVでsessionにセット
+		AffiliationDAO dao = new AffiliationDAO();
+		HttpSession session = request.getSession();
+		Group group = (Group) session.getAttribute("group");
+		ArrayList<Affiliation> alist = dao.getMemberList(group.getGroupID());
+		String memberList = "";
+		AccountDAO adao = new AccountDAO();
+		for (int i = 0; i < alist.size(); i++) {
+			if (i != 0) {
+				memberList += ",";
+			}
+			memberList += adao.getUsername(alist.get(i).getAccountID());
+		}
+		session.setAttribute("memberList", memberList);
 	}
 
 	public void changeAffiliation(HttpServletRequest request, HttpServletResponse response) {
@@ -86,7 +103,6 @@ public class AffiliationManager {
 			groupList += gdao.getByID(alist.get(i).getGroupID());
 		}
 		return groupList;
-
 	}
 
 	public String changeMainGroup(HttpServletRequest request, HttpServletResponse response) {

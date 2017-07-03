@@ -8,43 +8,53 @@
 </head>
 <body>
 	<h1>加入団体選択画面</h1>
+	<hr>
 	<div align="right">
-		<hr>
-		<input placeholder="検索" name="id" size="40" maxlength="10"
-			type="search">
+		<form action="Controller" method="post">
+			<input type="text" name="searchGroup" maxlength="10">
+			<button type="submit" name="req" value="searchByName">検索</button>
+		</form>
 	</div>
-	<div align="center">
-		<select style="width: 250px;" name="group">
-			<option value="団体A">団体A</option>
-			<option value="団体B">団体B</option>
-			<option value="団体C">団体C</option>
-		</select>
-		<p>
-		<div style="display: inline-flex">
-			<table>
-				<tbody>
-					<tr align="center">
-						<td>
-							<table>
-								<tbody>
-									<tr>
-										<td>
-											<form action="manageGroup.jsp" method="post">
-												<button type="submit" name="cancel">キャンセル</button>
-											</form>
-										</td>
-										<td>
-											<form action="home.jsp" method="post">
-												<button type="submit" name="cancel">新しい団体に加入する</button>
-											</form>
-										</td>
-								</tbody>
-							</table>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+	<form action="Controller" method="post">
+		<div align="center">
+			<div style="margin-top: 10px">
+				<select name="groupID" style="width: 250px;" name="groupID">
+					<%
+						if (session.getAttribute("groupList") != null) {
+							String groupList = (String) session.getAttribute("groupList");
+							String[] groupName = groupList.split(",");
+							for (String name : groupName) {
+								out.println("<option value=\"" + name + "\">" + name + "</option>");
+							}
+						}
+					%>
+				</select>
+			</div>
+			<p>
+			<div style="display: inline-flex">
+				<table>
+					<tbody>
+						<tr align="center">
+							<td>
+								<table>
+									<tbody>
+										<tr>
+											<td>
+												<button type="button"
+													onclick="location.href='manageGroup.jsp'">キャンセル</button>
+											</td>
+											<td>
+												<button type="submit" name="req" value="addAffiliation"
+													onclick="location.href='home.jsp'">新しい団体に加入する</button>
+											</td>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div>
+	</form>
 </body>
 </html>

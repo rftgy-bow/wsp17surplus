@@ -215,6 +215,40 @@ public class AffiliationDAO {
 		return list;
 	}
 
+	public ArrayList<Affiliation> getMemberList(String groupid) {
+		ArrayList<Affiliation> list = new ArrayList<Affiliation>();
+		Connection connection = null;
+		String sql = "select * from affiliation where groupid =? ORDER BY affiliationid ASC";
+		try {
+			Class.forName(driverClassName);
+			connection = DriverManager.getConnection(url, user, password);
+			PreparedStatement pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, groupid);
+			ResultSet resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				Affiliation cache = new Affiliation();
+				cache.setAffiliationID(resultSet.getInt("affiliationid"));
+				cache.setAccountID(resultSet.getString("accountid"));
+				cache.setGroupID(resultSet.getString("groupid"));
+				cache.setRole(resultSet.getString("role"));
+				cache.setIsMain(resultSet.getBoolean("ismain"));
+				list.add(cache);
+			}
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//クローズ処理
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
+
 	public void changeMainGroup(String accountID, String groupID) {
 		Connection connection = null;
 		String sql1 = "update affiliation set ismain = false where accountid=? and ismain = true";

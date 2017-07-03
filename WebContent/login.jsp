@@ -3,26 +3,23 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="ja">
 <head>
-<meta content="text/html; charset=UTF-8" http-equiv="content-type">
-<!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>ログイン画面</title>
 </head>
 <body>
 	<h1>出欠管理システム</h1>
+	<hr>
 	<div align="center">
 		<form action="Controller" method="post">
-			<hr>
 			<table style="width: 400px; height: 150px;" border="0">
 				<tbody>
 					<tr>
-						<th>ID</th>
-						<td><input name="accountID" size="40" maxlength="10"
-							type="text"></td>
+						<th>アカウントID</th>
+						<td><input type="text" name="accountID" maxlength="10"></td>
 					</tr>
 					<tr>
 						<th>パスワード</th>
-						<td><input name="accountPass" size="40" maxlength="64"
-							type="password"></td>
+						<td><input type="password" name="accountPass" maxlength="64"></td>
 					</tr>
 				</tbody>
 				<%
@@ -33,9 +30,9 @@
 			</table>
 			<button type="submit" name="req" value="login">ログイン</button>
 		</form>
-		<form action="createAccount.jsp" method="post">
-			<button type="submit" name="newaccount">アカウント新規作成</button>
-		</form>
+		<div style="margin-top: 10px">
+			<button type="button" onclick="location.href='createAccount.jsp'">アカウント新規作成</button>
+		</div>
 	</div>
 </body>
 </html>

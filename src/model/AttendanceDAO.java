@@ -6,16 +6,18 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Properties;
 
-public class AccountDAO {
+public class AttendanceDAO {
 	private static String filename = "db.properties";
 	private static String user; // アクセスできるユーザ
 	private static String password; // wspuserのパスワード
 	private static String driverClassName;
 	private static String url;
 
-	public AccountDAO() {
+	public AttendanceDAO() {
 		Properties props = new Properties();
 		try {
 			props.load(getClass().getClassLoader().getResourceAsStream(filename));
@@ -28,25 +30,20 @@ public class AccountDAO {
 		}
 	}
 
-	public boolean check(String accountID, String accountPass) {
-		// accountがDBにあるかどうかを調べる
-		boolean result = false;
+	public boolean check(String accountID, int scheduleID) {
 		Connection connection = null;
-		String sql = "select * from account where accountid=? and pass=?";
-
+		String sql = "select * from attendance where accountid=? and scheduleid=?";
+		boolean result = false;
 		try {
 			Class.forName(driverClassName);
 			connection = DriverManager.getConnection(url, user, password);
 			PreparedStatement pstmt = connection.prepareStatement(sql);
-
 			pstmt.setString(1, accountID);
-			pstmt.setString(2, accountPass);
-
+			pstmt.setInt(2, scheduleID);
 			ResultSet resultSet = pstmt.executeQuery();
 			if (resultSet.next()) {
 				result = true;
 			}
-			resultSet.close();
 			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -62,25 +59,27 @@ public class AccountDAO {
 		return result;
 	}
 
-	public Account login(String accountID, String accountPass) {
-		//DBからアカウント情報を取得しそれを返す
-		Account account = null;
+	public Attendance getAttendance(String accountID, int scheduleID) {
+		Attendance attendance = new Attendance();
 		Connection connection = null;
-		String sql = "select *from account where accountID=? and pass=?";
+		String sql = "select * from attendance where accountid=? and scheduleid=?";
 		try {
 			Class.forName(driverClassName);
 			connection = DriverManager.getConnection(url, user, password);
 			PreparedStatement pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, accountID);
-			pstmt.setString(2, accountPass);
+			pstmt.setInt(2, scheduleID);
 			ResultSet resultSet = pstmt.executeQuery();
 			if (resultSet.next()) {
-				account = new Account();
-				account.setAccountID(accountID);
-				account.setPass(accountPass);
-				account.setUserName(resultSet.getString("userName"));
+				attendance.setAttendanceID(resultSet.getInt(1));
+				attendance.setAccountID(resultSet.getString(2));
+				attendance.setGroupID(resultSet.getString(3));
+				attendance.setScheduleID(resultSet.getInt(4));
+				attendance.setAbsenceType(resultSet.getString(5));
+				attendance.setReason(resultSet.getString(6));
+				attendance.setAttendTime(resultSet.getTime(7));
+				attendance.setLeaveTime(resultSet.getTime(8));
 			}
-			resultSet.close();
 			pstmt.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,53 +92,24 @@ public class AccountDAO {
 				e.printStackTrace();
 			}
 		}
-		return account;
+		return attendance;
 	}
 
-	public boolean findByAccountID(String accountID) {
-		boolean result = false;
+	public void putAttendance(String accountID, String groupID, int scheduleID, String absenceType,
+			String reason, Time attendTime, Time leaveTime) {
 		Connection connection = null;
-		String sql = "select * from account where accountID=?";
+		String sql = "insert into attendance values(nextval('attendance_attendanceID_seq'),?,?,?,?,?,?,?)";
 		try {
 			Class.forName(driverClassName);
 			connection = DriverManager.getConnection(url, user, password);
 			PreparedStatement pstmt = connection.prepareStatement(sql);
-
 			pstmt.setString(1, accountID);
-
-			ResultSet resultSet = pstmt.executeQuery();
-			if (resultSet.next()) {
-				result = true;
-			}
-			resultSet.close();
-			pstmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			//クローズ処理
-			try {
-				if (connection != null)
-					connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return result;
-	}
-
-	public void createAccount(String accountID, String accountPass, String userName) {
-		Connection connection = null;
-		String sql = "insert into account values(?,?,?)";
-		PreparedStatement pstmt = null;
-		try {
-			Class.forName(driverClassName);
-			connection = DriverManager.getConnection(url, user, password);
-			pstmt = connection.prepareStatement(sql);
-
-			pstmt.setString(1, accountID);
-			pstmt.setString(2, accountPass);
-			pstmt.setString(3, userName);
-
+			pstmt.setString(2, groupID);
+			pstmt.setInt(3, scheduleID);
+			pstmt.setString(4, absenceType);
+			pstmt.setString(5, reason);
+			pstmt.setTime(6, attendTime);
+			pstmt.setTime(7, leaveTime);
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
@@ -155,17 +125,20 @@ public class AccountDAO {
 		}
 	}
 
-	public void deleteAccount(String accountID, String accountPass) {
+	public void updateAttendance(String accountID, int scheduleID, String absenceType, String reason, Time attendTime,
+			Time leaveTime) {
 		Connection connection = null;
-		String sql = "delete from account where accountID=? and pass=?";
+		String sql = "update attendance set absencetype=?, reason=?, attendtime=?, leavetime=? where accountid=? and scheduleid=?";
 		try {
 			Class.forName(driverClassName);
 			connection = DriverManager.getConnection(url, user, password);
 			PreparedStatement pstmt = connection.prepareStatement(sql);
-
-			pstmt.setString(1, accountID);
-			pstmt.setString(2, accountPass);
-
+			pstmt.setString(1, absenceType);
+			pstmt.setString(2, reason);
+			pstmt.setTime(3, attendTime);
+			pstmt.setTime(4, leaveTime);
+			pstmt.setString(5, accountID);
+			pstmt.setInt(6, scheduleID);
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {
@@ -181,44 +154,27 @@ public class AccountDAO {
 		}
 	}
 
-	public void changePass(String accountID, String accountPass, String newPass) {
+	public ArrayList<Attendance> getAttendanceList(int scheduleID) {
+		ArrayList<Attendance> alist = new ArrayList<Attendance>();
 		Connection connection = null;
-		String sql = "update account set pass=? where accountid=?";
+		String sql = "select * from attendance where scheduleid=?";
 		try {
 			Class.forName(driverClassName);
 			connection = DriverManager.getConnection(url, user, password);
 			PreparedStatement pstmt = connection.prepareStatement(sql);
-
-			pstmt.setString(1, newPass);
-			pstmt.setString(2, accountID);
-
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			//クローズ処理
-			try {
-				if (connection != null)
-					connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public String getUsername(String accountID) {
-		Connection connection = null;
-		String sql = "select * from account where accountid=?";
-		String username = "";
-		try {
-			Class.forName(driverClassName);
-			connection = DriverManager.getConnection(url, user, password);
-			PreparedStatement pstmt = connection.prepareStatement(sql);
-			pstmt.setString(1, accountID);
+			pstmt.setInt(1, scheduleID);
 			ResultSet resultSet = pstmt.executeQuery();
-			if (resultSet.next()) {
-				username = resultSet.getString("username");
+			while (resultSet.next()) {
+				Attendance cache = new Attendance();
+				cache.setAttendanceID(resultSet.getInt("attendanceid"));
+				cache.setAccountID(resultSet.getString("accountid"));
+				cache.setGroupID(resultSet.getString("groupid"));
+				cache.setScheduleID(scheduleID);
+				cache.setAbsenceType(resultSet.getString("absencetype"));
+				cache.setReason(resultSet.getString("reason"));
+				cache.setAttendTime(resultSet.getTime("attendtime"));
+				cache.setLeaveTime(resultSet.getTime("leavetime"));
+				alist.add(cache);
 			}
 			resultSet.close();
 			pstmt.close();
@@ -233,6 +189,44 @@ public class AccountDAO {
 				e.printStackTrace();
 			}
 		}
-		return username;
+		return alist;
+	}
+
+	public void initAttendance(String groupID, int scheduleID) {
+		//scheduleIDのスケジュールにグループ全員の未登録を登録
+		Connection connection = null;
+		String sql1 = "select * from affiliation where groupid=?";
+		String sql2 = "insert into attendance values(nextval('attendance_attendanceID_seq'),?,?,?,'未登録','','00:00','00:00')";
+		ArrayList<String> accountIDList = new ArrayList<String>();
+		try {
+			Class.forName(driverClassName);
+			connection = DriverManager.getConnection(url, user, password);
+			PreparedStatement pstmt = connection.prepareStatement(sql1);
+			pstmt.setString(1, groupID);
+			ResultSet resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				accountIDList.add(resultSet.getString("accountid"));
+			}
+			resultSet.close();
+			pstmt.close();
+			pstmt = connection.prepareStatement(sql2);
+			for (int i = 0; i < accountIDList.size(); i++) {
+				pstmt.setString(1, accountIDList.get(i));
+				pstmt.setString(2, groupID);
+				pstmt.setInt(3, scheduleID);
+				pstmt.executeUpdate();
+			}
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			//クローズ処理
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

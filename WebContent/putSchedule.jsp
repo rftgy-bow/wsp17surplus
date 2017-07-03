@@ -51,7 +51,7 @@
 					</tr>
 				</tbody>
 			</table>
-			<button type="button" onclick="location.href='putSchedulet'">予定作成</button>
+			<button type="button" onclick="location.href='putSchedule.jsp'">予定作成</button>
 		</form>
 		<div style="margin-top: 10px">
 			<button type="button" onclick="location.href='calender.jsp'">キャンセル</button>

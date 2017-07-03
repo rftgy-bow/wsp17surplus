@@ -77,8 +77,9 @@ function printCalendar(dateList) {
 					clout += textCount - lastDay;
 					if (scheduleIsExist == false) {
 						clout += putSchedule(dateFormat.format(clday));
-					}else{
-						clout += putAttendance(dateFormat.format(clday));
+					} else {
+						clout += jumpPutAttendance(dateFormat.format(clday));
+						clout += jumpTimeline(dateFormat.format(clday));
 					}
 				} else {
 					clout += "<td class=\"other\">";
@@ -92,20 +93,31 @@ function printCalendar(dateList) {
 	clout += "</table>";
 	document.write(clout);
 }
+
+// getメソッドでパラメータを送信した場合、setCharacterEncodingメソッドを無視される
 function putSchedule(cldate) {
-	var sout = "<form action=\"putSchedule.jsp\" method=\"get\">"
+	var sout = "<form action=\"putSchedule.jsp\" method=\"post\">"
 			+ "<input type= \"hidden\" name=\"date\" value =\"" + cldate
 			+ "\"/>" + "<button type=\"submit\">予定作成</button>" + "</form>";
 	return sout;
 }
 
-function putAttendance(cldate) {
-	var aout = "<form action=\"putAttendance.jsp\" method=\"get\">"
+function jumpPutAttendance(cldate) {
+	var aout = "<form action=\"Controller\" method=\"post\">"
 			+ "<input type= \"hidden\" name=\"date\" value =\""
 			+ cldate
 			+ "\"/>"
-			+ "<button type=\"submit\" name=\"req\" value=\"putAttendance\">出欠入力</button>"
+			+ "<button type=\"submit\" name=\"req\" value=\"jumpPutAttendance\">出欠入力</button>"
 			+ "</form>";
 	return aout;
+}
 
+function jumpTimeline(cldate) {
+	var tout = "<form action=\"Controller\" method=\"post\">"
+			+ "<input type= \"hidden\" name=\"date\" value =\""
+			+ cldate
+			+ "\"/>"
+			+ "<button type=\"submit\" name=\"req\" value=\"jumpTimeline\">タイムライン</button>"
+			+ "</form>";
+	return tout;
 }

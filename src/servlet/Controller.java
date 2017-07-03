@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.AccountManager;
 import model.AffiliationManager;
+import model.AttendanceManager;
 import model.GroupManager;
 import model.ScheduleManager;
 
@@ -28,6 +29,7 @@ public class Controller extends HttpServlet {
 	GroupManager groupManager;
 	AffiliationManager affiliationManager;
 	ScheduleManager scheduleManager;
+	AttendanceManager attendanceManager;
 
 	public Controller() {
 		super();
@@ -35,6 +37,7 @@ public class Controller extends HttpServlet {
 		groupManager = new GroupManager();
 		affiliationManager = new AffiliationManager();
 		scheduleManager = new ScheduleManager();
+		attendanceManager = new AttendanceManager();
 	}
 
 	/**
@@ -52,6 +55,7 @@ public class Controller extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 
+		request.setCharacterEncoding("UTF-8");
 		String requestValue = "";
 		requestValue = request.getParameter("req");
 		String result = "";
@@ -65,7 +69,9 @@ public class Controller extends HttpServlet {
 			if (result == "/home.jsp") {
 				affiliationManager.login(request, response);
 				groupManager.login(request, response);
+				affiliationManager.setMemberList(request, response);
 				scheduleManager.login(request, response);
+				attendanceManager.setAllAttendanceList(request, response);
 			}
 			break;
 		case "logout":
@@ -92,7 +98,9 @@ public class Controller extends HttpServlet {
 		case "changeGroup":
 			groupManager.changeGroup(request, response);
 			affiliationManager.changeAffiliation(request, response);
+			affiliationManager.setMemberList(request, response);
 			scheduleManager.login(request, response);
+			attendanceManager.setAllAttendanceList(request, response);
 			result = "/home.jsp";
 			break;
 		case "changeMainGroup":
@@ -103,9 +111,27 @@ public class Controller extends HttpServlet {
 			break;
 		case "putSchedule":
 			result = scheduleManager.putSchedule(request, response);
+			scheduleManager.login(request, response);
+			attendanceManager.setAllAttendanceList(request, response);
 			break;
+		case "putAttendance":
+			//initAttendanceにより不要になりますた。
+			result = attendanceManager.putAttendance(request, response);
+			attendanceManager.setAllAttendanceList(request, response);
+			break;
+		case "updteAttendance":
+			result = attendanceManager.updateAttendance(request, response);
+			attendanceManager.setAllAttendanceList(request, response);
+			break;
+		case "jumpTimeline":
+			scheduleManager.setSchedule(request, response);
+			result = attendanceManager.jumpTimeline(request, response);
+			break;
+		case "jumpPutAttendance":
+			scheduleManager.setSchedule(request, response);
+			attendanceManager.checkAttendance(request, response);
+			result = "/putAttendance.jsp";
 		}
 		getServletContext().getRequestDispatcher(result).forward(request, response);
 	}
-
 }

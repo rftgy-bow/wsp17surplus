@@ -26,12 +26,20 @@
     <br>
     <br>
     <form method="post" action="authorization.jsp">
-    <button type="button" name="changeRole" value="aaa" style="WIDTH:150px"> <font size="4"> 
-    決定する </font></button>
+    
+     <button type="button" name="changeRole" value="aaa" style="WIDTH:150px" onclick="location.href='authorization.jsp'">
+      <font size="4"> 
+    決定する 
+      </font>
+     </button>
     </form>
+    
     <form method="post" action="memberList.jsp">
-    <button type="button" name="backMemb" value="aaa"style="WIDTH:300px"> <font size="4"> 
-    メンバー一覧画面に戻る </font></button>
+     <button type="button" name="backMemb" value="aaa"style="WIDTH:300px" onclick="location.href='memberList.jsp'"> 
+      <font size="4"> 
+    メンバー一覧画面に戻る 
+      </font>
+     </button>
     </form>
 </body>
 </html>

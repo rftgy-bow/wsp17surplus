@@ -53,6 +53,7 @@ table.callender td.schedule{ /*スケジュールあり*/
 }
 table.callender td.todaySchedule{ /*スケジュールあり*/
 	background: #00FF00;
+	border: solid 2px #FF0000;
 }
 button {
 	font-size: 10px;

@@ -4,19 +4,39 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>deleteAccount</title>
 </head>
 <body>
-<%
-if(session.getAttribute("deleteAccount")!=null && !(Boolean)session.getAttribute("deleteAccount")){
-	out.println("<p>IDまたはパスワードが間違っています。</p>");
-}
-%>
-<form action="Controller" method="post">
-アカウントID<input type="text" name="accountID" size="12" required/><br>
-パスワード<input type="password" name="accountPass" size="12" required/><br>
-<button type="submit" name="req" value="deleteAccount">削除する</button>
-<button type="button" onclick="location.href='manageAccount.jsp'">取り消し</button>
-</form>
+ <br>
+            <br>
+            <div style="text-align: left;">　　　　　　
+              　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <b><font color="#e0a000">※　本当にアカウントを削除してよろしいですか？<br>
+                  　　　　　　
+                  　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp; ※　一度削除したアカウントは二度と使用できなくなります。<br>
+                  　　　　　　
+                  　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  ※　本当によろしいですか？</font></b><br>
+                  <%
+            if(session.getAttribute("deleteAccount")!=null && !(Boolean)session.getAttribute("deleteAccount")) {
+	        out.println("<p>IDまたはパスワードが違います</p>");
+             }
+            %>
+            <form action="Controller" method="post">
+              <br>
+              <br>
+              <br>
+              <br>
+              　　　　　　　アカウントID　<input size="70" name="SelectAccout" type="text" required/><br>
+              　　　　　　　パスワード　　<input type="password" name="accountPass" size="70" required/><br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              　　　　　　　<em>　<button type="submit" name="req" value="deleteAccount">削除する</button></em>
+              　　　　　　　<button type="button" onclick="location.href='manageAccount.jsp'">取り消し</button>
+</form>           
 </body>
 </html>

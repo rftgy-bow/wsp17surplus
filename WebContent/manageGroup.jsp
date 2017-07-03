@@ -4,14 +4,27 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>manageGroup</title>
+<!-- css -->
+<link rel ="stylesheet" href="${pageContext.request.contextPath}/css/surplus.css">
 </head>
 <body>
-
-<button type="button" >ホーム団体に設定</button>
-<button type="button" onclick="location.href='withdraw.jsp'">脱退</button>
-<button type="button" onclick="location.href='chooseGroup.jsp'">新しく団体に加入</button>
-<button type="button" onclick="location.href='createGroup.jsp'">新しい団体を作成</button>
-<button type="button" onclick="location.href='home.jsp'">戻る</button>
+<left>
+      <form method="post" action="manageGroup.jsp">
+      <select style="width: 229px; height: 70px;" name="attendance">
+        <option value="attend">団体A</option>
+        <option value="absent">団体B</option>
+        <option value="leave early">団体C</option>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+      </select>
+      </form>
+      <br>
+      <br>
+       </left>
+ <Div Align="center"><button class="button" type="button" onclick="location.href='home.jsp'">ホーム団体に設定</button></Div><br>
+<Div Align="center"><button class="button" type="button" onclick="location.href='withdraw.jsp'">脱退</button></Div><br>
+<Div Align="center"><button class="button" type="button" onclick="location.href='chooseGroup.jsp'">新しく団体に加入</button></Div><br>
+<Div Align="center"><button class="button" type="button" onclick="location.href='createGroup.jsp'">新しい団体を作成</button></Div><br>
+<Div Align="center"><button class="button" type="button" onclick="location.href='home.jsp'">戻る</button></Div><br>
 </body>
 </html>
